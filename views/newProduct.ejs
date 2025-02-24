@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Create New Product</title>
+  <link rel="stylesheet" href="/css/styles.css">
+</head>
+<body>
+  <header>
+    <h1>Create New Product</h1>
+    <button class="back-dashboard-btn" onclick="window.location.href='/admin/data-manager'">Back to Data Manager</button>
+  </header>
+  <main>
+    <form action="/admin/new-product" method="POST">
+      <label for="productName">Product Name:</label>
+      <input type="text" name="productName" id="productName" required>
+      
+      <label for="brandDesc">Brand Desc:</label>
+      <input type="text" name="brandDesc" id="brandDesc">
+      
+      <label for="sellPrice">Sell Price:</label>
+      <input type="number" name="sellPrice" id="sellPrice" step="0.01" required>
+      
+      <label for="category">Category:</label>
+      <input type="text" name="category" id="category">
+      
+      <button type="submit">Create Product</button>
+    </form>
+  </main>
+</body>
+</html>

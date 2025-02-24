@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Register</title>
+  <link rel="stylesheet" href="/css/styles.css">
+</head>
+<body>
+  <header>
+    <h1>Register</h1>
+  </header>
+  <form action="/users/register" method="POST">
+    <label for="name">Name:</label>
+    <input type="text" name="name" id="name" required>
+    
+    <label for="email">Email:</label>
+    <input type="email" name="email" id="email" required>
+    
+    <label for="password">Password:</label>
+    <input type="password" name="password" id="password" required>
+    
+    <label for="confirm_password">Confirm Password:</label>
+    <input type="password" name="confirm_password" id="confirm_password" required>
+    
+    <legend>Address</legend>
+    <label for="street">Street:</label>
+    <input type="text" name="address[street]" id="street" required>
+      
+    <label for="city">City:</label>
+    <input type="text" name="address[city]" id="city" required>
+      
+    <label for="zipcode">Zipcode:</label>
+    <input type="text" name="address[zipcode]" id="zipcode" required>
+    
+    <button type="submit">Register</button>
+  </form>
+  <p>Already have an account? <a href="/users/login">Login here</a></p>
+
+  <footer>
+    <p>Madi Nurkenov & Makhabbat Khalel</p>
+  </footer>
+</body>
+</html>

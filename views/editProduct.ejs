@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Edit Product</title>
+  <link rel="stylesheet" href="/css/styles.css">
+</head>
+<body>
+  <header>
+    <h1>Edit Product</h1>
+    <button class="back-dashboard-btn" onclick="window.location.href='/admin/data-manager'">Back to Data Manager</button>
+  </header>
+  <main>
+    <form action="/admin/edit-product/<%= product._id %>" method="POST">
+      <label for="productName">Product Name:</label>
+      <input type="text" name="productName" id="productName" value="<%= product["Product Name"] %>" required>
+      
+      <label for="brandDesc">Brand Desc:</label>
+      <input type="text" name="brandDesc" id="brandDesc" value="<%= product["Brand Desc"] %>">
+      
+      <label for="sellPrice">Sell Price:</label>
+      <input type="number" name="sellPrice" id="sellPrice" value="<%= product.SellPrice %>" step="0.01" required>
+      
+      <label for="category">Category:</label>
+      <input type="text" name="category" id="category" value="<%= product.Category %>">
+      
+      <button type="submit">Update Product</button>
+    </form>
+  </main>
+</body>
+</html>

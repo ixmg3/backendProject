@@ -1,0 +1,305 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Admin Data Manager</title>
+  <link rel="stylesheet" href="/css/styles.css">
+</head>
+<body>
+  <header>
+    <h1>Admin Data Manager</h1>
+    <button class="back-dashboard-btn" onclick="window.location.href='/'">Back to Dashboard</button>
+  </header>
+  <main>
+    <!-- buttons to toggle between user and product management, and the report things i guess -->
+    <section id="management-toggle">
+      <button id="userManagementBtn">User Management</button>
+      <button id="productManagementBtn">Product Management</button>
+      <button id="reportsBtn">Reports</button>
+    </section>
+    
+    <!-- user management -->
+    <section id="userManagementSection" class="hidden">
+      <h2>User Management</h2>
+      <div>
+        <input type="text" id="userSearchInput" placeholder="Search users by email">
+        <button id="userSearchBtn">Search</button>
+      </div>
+      <div id="userResults">
+        <!-- search results here -->
+      </div>
+    </section>
+    
+    <!-- product management -->
+    <section id="productManagementSection" class="hidden">
+      <h2>Product Management</h2>
+      <div>
+        <!-- get all products button -->
+        <button id="getAllProductsBtn">Retrieve All Products</button>
+        <span style="color: red;">Warning: This may take some time.</span>
+      </div>
+      <div>
+        <input type="text" id="productSearchInput" placeholder="Search products">
+        <select id="productSearchCriteria">
+          <option value="Brand Desc">Name (Brand Desc)</option>
+          <option value="SellPrice">Price (SellPrice)</option>
+          <option value="Category">Category (Category)</option>
+        </select>
+        <button id="productSearchBtn">Search</button>
+        <a href="/admin/new-product"><button>Create New Product</button></a>
+      </div>
+
+      <!-- table of products with sorting -->
+      <table id="productResultsTable">
+        <thead>
+          <tr>
+            <th>
+              Name 
+              <button class="sort-btn" data-field="Brand Desc" data-order="asc">Toggle</button>
+            </th>
+            <th>
+              Category 
+              <button class="sort-btn" data-field="Category" data-order="asc">Toggle</button>
+            </th>
+            <th>
+              Price 
+              <button class="sort-btn" data-field="SellPrice" data-order="asc">Toggle</button>
+            </th>
+          </tr>
+        </thead>
+        <tbody id="productResultsBody">
+          <!-- results here -->
+        </tbody>
+      </table>
+    </section>
+
+    <!-- uh reports -->
+    <section id="reportsSection" class="hidden report-section">
+      <h2>Reports</h2>
+      <div>
+        <button id="monthlySalesBtn">Monthly Sales Report</button>
+        <button id="productStatsBtn">Product Statistics by Category</button>
+      </div>
+      
+      <!-- monthly sales report -->
+      <div id="monthlySalesReport" class="hidden">
+        <h3>Monthly Sales Report</h3>
+        <table>
+          <thead>
+            <tr>
+              <th>Year</th>
+              <th>Month</th>
+              <th>Total Sales</th>
+              <th>Order Count</th>
+            </tr>
+          </thead>
+          <tbody id="monthlySalesBody"></tbody>
+        </table>
+      </div>
+      
+      <!-- product stats here -->
+      <div id="productStatsReport" class="hidden">
+        <h3>Product Statistics by Category</h3>
+        <table>
+          <thead>
+            <tr>
+              <th>Category</th>
+              <th>Average Price</th>
+              <th>Min Price</th>
+              <th>Max Price</th>
+              <th>Product Count</th>
+            </tr>
+          </thead>
+          <tbody id="productStatsBody"></tbody>
+        </table>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    <p>Madi Nurkenov & Makhabbat Khalel</p>
+  </footer>
+  <!-- oops more js code that i couldnt put into a separate js file -->
+  <script>
+    // button creation here
+    const userManagementBtn = document.getElementById('userManagementBtn');
+    const productManagementBtn = document.getElementById('productManagementBtn');
+    const userManagementSection = document.getElementById('userManagementSection');
+    const productManagementSection = document.getElementById('productManagementSection');
+    
+    userManagementBtn.addEventListener('click', () => {
+      userManagementSection.classList.remove('hidden');
+      productManagementSection.classList.add('hidden');
+      reportsSection.classList.add('hidden');
+    });
+    
+    productManagementBtn.addEventListener('click', () => {
+      productManagementSection.classList.remove('hidden');
+      userManagementSection.classList.add('hidden');
+      reportsSection.classList.add('hidden');
+    });
+
+    reportsBtn.addEventListener('click', () => {
+      reportsSection.classList.remove('hidden');
+      userManagementSection.classList.add('hidden');
+      productManagementSection.classList.add('hidden');
+    });
+    
+    // user management here
+    const userSearchInput = document.getElementById('userSearchInput');
+    const userSearchBtn = document.getElementById('userSearchBtn');
+    const userResultsDiv = document.getElementById('userResults');
+    
+    userSearchBtn.addEventListener('click', async () => {
+      const emailQuery = userSearchInput.value.trim();
+      if (!emailQuery) {
+        alert("Please enter an email.");
+        return;
+      }
+      const res = await fetch('/admin/search-users?email=' + encodeURIComponent(emailQuery));
+      const users = await res.json();
+      userResultsDiv.innerHTML = "";
+      if (users.length === 0) {
+        userResultsDiv.innerHTML = "<p>No users found.</p>";
+      } else {
+        users.forEach(user => {
+          const div = document.createElement('div');
+          div.innerHTML = `
+            <p><strong>Name:</strong> ${user.name}</p>
+            <p><strong>Email:</strong> ${user.email}</p>
+            <p><strong>Password:</strong> ${user.password}</p>
+            <p><strong>Address:</strong> ${user.address ? user.address.street + ", " + user.address.city + ", " + user.address.zipcode : "N/A"}</p>
+            <p><strong>Order History:</strong> ${user.order_history ? user.order_history.join(", ") : "None"}</p>
+            <button onclick="editUser('${user._id}')">Edit User</button>
+          `;
+          userResultsDiv.appendChild(div);
+        });
+      }
+    });
+    
+    function editUser(userId) {
+      window.location.href = '/admin/edit-user/' + userId;
+    }
+    
+    // product management here
+    let currentProducts = [];
+    const getAllProductsBtn = document.getElementById('getAllProductsBtn');
+    const productSearchInput = document.getElementById('productSearchInput');
+    const productSearchCriteria = document.getElementById('productSearchCriteria');
+    const productSearchBtn = document.getElementById('productSearchBtn');
+    const productResultsBody = document.getElementById('productResultsBody');
+    
+    function renderProducts(products) {
+    productResultsBody.innerHTML = "";
+    products.forEach(product => {
+      const tr = document.createElement('tr');
+      tr.innerHTML = `
+        <td>${product["Brand Desc"]} (${product["Product Name"]})</td>
+        <td>${product["Category"] || "N/A"}</td>
+        <td>${product["SellPrice"]}</td>
+        <td><a href="/admin/edit-product/${product._id}"><button>Edit</button></a></td>
+      `;
+      productResultsBody.appendChild(tr);
+    });
+}
+    
+
+    getAllProductsBtn.addEventListener('click', async () => {
+      if (!confirm("Warning: Retrieving all products might take some time. Continue?")) return;
+      const res = await fetch('/admin/all-products');
+      currentProducts = await res.json();
+      renderProducts(currentProducts);
+    });
+    
+    productSearchBtn.addEventListener('click', async () => {
+      const query = productSearchInput.value.trim();
+      const criteria = productSearchCriteria.value; // Brand Desc, SellPrice, Category. Maybe add a dropdown menu to show all the available categories if i have the time
+      if (!query) {
+        alert("Please enter a search query.");
+        return;
+      }
+      const res = await fetch(`/admin/search-products?criteria=${encodeURIComponent(criteria)}&query=${encodeURIComponent(query)}`);
+      currentProducts = await res.json();
+      renderProducts(currentProducts);
+    });
+    
+    // sort toggle
+    const sortButtons = document.querySelectorAll('.sort-btn');
+    sortButtons.forEach(button => {
+      button.addEventListener('click', () => {
+        const field = button.getAttribute('data-field');
+        let order = button.getAttribute('data-order'); // ascending or descending
+        order = order === "asc" ? "desc" : "asc";
+        button.setAttribute('data-order', order);
+        // thank god i dont have to sort anything manually
+        currentProducts.sort((a, b) => {
+          let valA = a[field];
+          let valB = b[field];
+          if (field === "SellPrice") {
+            valA = Number(valA);
+            valB = Number(valB);
+          } else {
+            valA = valA ? valA.toLowerCase() : "";
+            valB = valB ? valB.toLowerCase() : "";
+          }
+          if (order === "asc") {
+            return valA > valB ? 1 : valA < valB ? -1 : 0;
+          } else {
+            return valA < valB ? 1 : valA > valB ? -1 : 0;
+          }
+        });
+        renderProducts(currentProducts);
+      });
+    });
+
+    // reports here
+    const monthlySalesBtn = document.getElementById('monthlySalesBtn');
+    const productStatsBtn = document.getElementById('productStatsBtn');
+    const monthlySalesReport = document.getElementById('monthlySalesReport');
+    const productStatsReport = document.getElementById('productStatsReport');
+    const monthlySalesBody = document.getElementById('monthlySalesBody');
+    const productStatsBody = document.getElementById('productStatsBody');
+    
+    monthlySalesBtn.addEventListener('click', async () => {
+      productStatsReport.classList.add('hidden');
+      const res = await fetch('/admin/reports/monthly-sales');
+      const data = await res.json();
+      
+      monthlySalesBody.innerHTML = "";
+      data.forEach(report => {
+        const { _id, totalSales, orderCount } = report;
+        const tr = document.createElement('tr');
+        tr.innerHTML = `
+          <td>${_id.year}</td>
+          <td>${_id.month}</td>
+          <td>${totalSales.toFixed(2)}</td>
+          <td>${orderCount}</td>
+        `;
+        monthlySalesBody.appendChild(tr);
+      });
+      monthlySalesReport.classList.remove('hidden');
+    });
+    
+    // product stats here
+    productStatsBtn.addEventListener('click', async () => {
+      monthlySalesReport.classList.add('hidden');
+      const res = await fetch('/admin/reports/product-stats');
+      const data = await res.json();
+      
+      productStatsBody.innerHTML = "";
+      data.forEach(stat => {
+        const tr = document.createElement('tr');
+        tr.innerHTML = `
+          <td>${stat._id || "Uncategorized"}</td>
+          <td>${Number(stat.avgPrice).toFixed(2)}</td>
+          <td>${Number(stat.minPrice).toFixed(2)}</td>
+          <td>${Number(stat.maxPrice).toFixed(2)}</td>
+          <td>${stat.count}</td>
+        `;
+        productStatsBody.appendChild(tr);
+      });
+      productStatsReport.classList.remove('hidden');
+    });
+  </script>
+</body>
+</html>

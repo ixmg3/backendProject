@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Create New Order</title>
+  <link rel="stylesheet" href="/css/styles.css">
+</head>
+<body>
+  <header>
+    <h1>Create New Order</h1>
+    <button class="back-dashboard-btn" onclick="window.location.href='/'">Back to Dashboard</button>
+  </header>
+  
+  <main>
+    <!-- Search Section -->
+    <section id="search-section">
+      <h2>Search for a Product</h2>
+      <input type="text" id="searchInput" placeholder="Enter product description">
+      <button id="searchButton">Search</button>
+    </section>
+    
+    <!-- Order Box containing search results, order items, and submit button -->
+    <div id="order-box">
+      <!-- Search Results Section -->
+      <section id="search-results-section">
+        <h2>Search Results</h2>
+        <ul id="searchResultsList"></ul>
+      </section>
+      
+      <!-- Order Items Section -->
+      <section id="order-items-section">
+        <h2>Order Items</h2>
+        <ul id="orderItemsList"></ul>
+      </section>
+      
+      <button id="submitOrderButton">Submit Order</button>
+    </div>
+  </main>
+  
+  <script>
+    let selectedProducts = [];
+    const searchInput = document.getElementById('searchInput');
+    const searchButton = document.getElementById('searchButton');
+    const searchResultsList = document.getElementById('searchResultsList');
+    const orderItemsList = document.getElementById('orderItemsList');
+    const submitOrderButton = document.getElementById('submitOrderButton');
+
+    searchButton.addEventListener('click', async () => {
+      const query = searchInput.value.trim();
+      if (!query) return;
+      const res = await fetch('/products/search?query=' + encodeURIComponent(query));
+      const products = await res.json();
+      searchResultsList.innerHTML = '';
+      products.forEach(product => {
+        const li = document.createElement('li');
+        li.textContent = product["Brand Desc"] + " (" + product["Product Name"] + ") - $" + product["SellPrice"];
+        const addButton = document.createElement('button');
+        addButton.textContent = 'Add';
+        addButton.addEventListener('click', () => {
+          const existingIndex = selectedProducts.findIndex(p => p._id === product._id);
+          if(existingIndex > -1){
+            selectedProducts[existingIndex].quantity = (selectedProducts[existingIndex].quantity || 1) + 1;
+          } else {
+            let newProduct = Object.assign({}, product);
+            newProduct.quantity = 1;
+            selectedProducts.push(newProduct);
+          }
+          updateOrderItems();
+        });
+        li.appendChild(addButton);
+        searchResultsList.appendChild(li);
+      });
+    });
+
+    function updateOrderItems() {
+      orderItemsList.innerHTML = '';
+      selectedProducts.forEach((product, index) => {
+        const li = document.createElement('li');
+        li.textContent = product["Brand Desc"] + " - $" + product["SellPrice"] + " x " + product.quantity + " ";
+        
+        const minusButton = document.createElement('button');
+        minusButton.textContent = '-';
+        minusButton.addEventListener('click', () => {
+          if(product.quantity > 1) {
+            product.quantity--;
+          } else {
+            selectedProducts.splice(index, 1);
+          }
+          updateOrderItems();
+        });
+        
+        const plusButton = document.createElement('button');
+        plusButton.textContent = '+';
+        plusButton.addEventListener('click', () => {
+          product.quantity = (product.quantity || 1) + 1;
+          updateOrderItems();
+        });
+        
+        const removeButton = document.createElement('button');
+        removeButton.textContent = 'Remove';
+        removeButton.addEventListener('click', () => {
+          selectedProducts.splice(index, 1);
+          updateOrderItems();
+        });
+        
+        li.appendChild(minusButton);
+        li.appendChild(plusButton);
+        li.appendChild(removeButton);
+        orderItemsList.appendChild(li);
+      });
+    }
+
+    submitOrderButton.addEventListener('click', async () => {
+      if (selectedProducts.length === 0) {
+        alert("No products selected!");
+        return;
+      }
+      
+      const orderItems = selectedProducts.map(product => ({
+        product_id: product._id,
+        product_name: product["Brand Desc"],
+        quantity: product.quantity,
+        price: Number(product["SellPrice"])
+      }));
+      
+      const total_amount = orderItems.reduce((sum, item) => sum + (item.price * item.quantity), 0);
+
+      const res = await fetch('/orders', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ products: orderItems, total_amount })
+      });
+      
+      if (res.ok) {
+        alert('Order created successfully!');
+        window.location.href = '/';
+      } else {
+        const error = await res.json();
+        alert('Error creating order: ' + error.message);
+      }
+    });
+  </script>
+</body>
+</html>

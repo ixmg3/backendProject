@@ -1,0 +1,512 @@
+/* General Reset */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: Arial, sans-serif;
+}
+
+/* Body Styling */
+body {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+  margin: 0;
+  padding: 100px 0 100px 0; 
+  background-color: #f4f4f4;
+}
+
+/* Header */
+header {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  text-align: center;
+  padding: 30px;
+  background: #333;
+  color: white;
+  font-weight: bold;
+  font-size: 12px;
+  z-index: 1000;
+}
+
+/* Footer */
+footer {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  text-align: center;
+  padding: 17px;
+  background: #333;
+  color: white;
+  font-weight: bold;
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  font-size: 13px;
+}
+
+/* ----------------- Login/Register Page Specific Styles ----------------- */
+
+/* Form Styling */
+form {
+  background: white;
+  padding: 15px;
+  border-radius: 8px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  margin: 15px auto;
+  width: 220px;
+  display: flex;
+  flex-direction: column;
+}
+
+label {
+  margin-top: 8px;
+  font-weight: bold;
+  color: #555;
+  font-size: 14px;
+}
+
+input {
+  padding: 5px;
+  margin-top: 5px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  font-size: 14px;
+}
+
+legend {
+  margin-top: 8px;
+  color: #555;
+  font-weight: bold;
+  font-size: 14px;
+}
+
+button {
+  margin-top: 10px;
+  padding: 6px;
+  background: #007bff;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 14px;
+}
+
+button:hover {
+  background: #0056b3;
+}
+
+/* Link */
+p {
+  margin-top: 10px;
+  text-align: center;
+  font-size: 14px;
+}
+
+a {
+  color: #007bff;
+  text-decoration: none;
+}
+
+a:hover {
+  text-decoration: underline;
+}
+
+.register-link {
+  margin-top: 15px;
+  text-align: center;
+}
+
+/* ----------------- Dashboard Page Specific Styles ----------------- */
+
+.user-info-box {
+  background: white;
+  padding: 20px;
+  margin: 20px auto;
+  width: 90%;
+  max-width: 600px;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  text-align: left;
+}
+
+.user-info-box p {
+  margin: 8px 0;
+  text-align: left;
+}
+
+.user-info-box section {
+  margin-top: 5px;
+  text-align: left;
+}
+
+.user-info-box button {
+  padding: 8px 12px;
+  font-size: 14px;
+}
+
+.user-actions {
+  display: flex;
+  flex-direction: row;
+  gap: 10px; /* Adjust spacing between buttons */
+  justify-content: center; /* Center buttons horizontally */
+  align-items: center;
+  margin-top: 10px; /* Optional: add space above the row */
+}
+
+/* Orders Section */
+#orders-section {
+  width: 100%;
+  max-width: 600px;
+  margin: 10px auto;
+}
+
+@media (min-width: 768px) {
+  #orders-section {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 767px) {
+  #orders-section {
+    grid-template-columns: 1fr;
+  }
+}
+
+#orders-section h2 {
+  margin-bottom: 15px;
+  font-size: 18px;
+  text-align: center;
+}
+
+.orders-grid {
+  display: grid;
+  gap: 20px;
+  /* Default to one column */
+  grid-template-columns: 1fr;
+}
+
+/* Each Order Box */
+.order-box {
+  background: white;
+  padding: 15px;
+  margin: 15px 0;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  text-align: left;
+}
+
+.order-box p {
+  margin: 5px 0;
+  text-align: left;
+}
+
+.order-box ul {
+  margin-left: 20px;
+  padding-left: 0;
+  list-style-type: disc;
+}
+
+.order-box form {
+  background: none;
+  box-shadow: none;
+  border: none;
+  padding: 0;
+  margin-top: 10px;
+}
+
+.order-link {
+  display: block;
+  color: black;
+  text-decoration: none;
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  transition: background-color 0.2s ease;
+}
+
+.order-link:hover {
+  background-color: #f0f0f0;
+}
+
+/* ----------------- Admin Data Manager Page Specific Styles ----------------- */
+
+main {
+  margin-top: 50px;
+}
+
+#userResults > div {
+  background: white;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  padding: 15px;
+  margin: 10px 0;
+  text-align: left;
+}
+
+#userResults p {
+  text-align: left;
+}
+
+#userResults > div button {
+  display: block;
+  margin: 10px auto 0 auto;
+}
+
+/* Product Management */
+#productResultsTable {
+  background: white;
+}
+
+/* Reports */
+#monthlySalesReport table,
+#productStatsReport table {
+  background: white;
+}
+
+.back-dashboard-btn {
+  background: white;
+  color: #333;
+  border: 1px solid #333;
+  border-radius: 4px;
+  padding: 8px 12px;
+  cursor: pointer;
+  font-size: 14px;
+  margin-top: 10px;
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+/* ----------------- Edit Users Page Specific Styles ----------------- */
+
+#user-edit-section {
+  background: white;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  padding: 20px;
+  margin: 20px auto;
+  width: 100%;
+  max-width: 800px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  text-align: left;
+}
+
+#user-edit-section form {
+  background: none;
+  border: none;
+  box-shadow: none;
+  padding: 0;
+  margin: 0;
+  width: 100%;
+}
+
+#user-edit-section form label,
+#user-edit-section form input,
+#user-edit-section form select,
+#user-edit-section form fieldset,
+#user-edit-section form legend {
+  display: block;
+  width: 100%;
+  margin-bottom: 10px;
+}
+
+#user-edit-section p {
+  text-align: left;
+}
+
+#user-edit-section form button {
+  display: block;
+  margin: 20px auto 0 auto;
+}
+
+#orders-edit-section {
+  background: white;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  padding: 20px;
+  margin: 20px auto;
+  width: 100%;
+  max-width: 800px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  text-align: left;
+}
+
+#orders-edit-section .order-form form {
+  background: none;
+  border: none;
+  box-shadow: none;
+  padding: 0;
+  margin: 0;
+  width: 100%;
+}
+
+#orders-edit-section .order-form form label,
+#orders-edit-section .order-form form input,
+#orders-edit-section .order-form form select,
+#orders-edit-section .order-form form fieldset,
+#orders-edit-section .order-form form legend {
+  display: block;
+  width: 100%;
+  margin-bottom: 10px;
+}
+
+#orders-edit-section h2,
+#orders-edit-section h3,
+#orders-edit-section p {
+  text-align: left;
+  margin-bottom: 10px;
+}
+
+.order-form {
+  margin-bottom: 20px;
+  text-align: left;
+}
+
+.order-form form button {
+  display: block;
+  margin: 20px auto 0 auto;
+}
+
+/* ----------------- Create Order Page Styles ----------------- */
+
+#search-section {
+  margin-top: 50px;
+}
+
+/* Search box */
+#search-section input {
+  padding: 8px;
+  width: 250px;
+  margin-right: 10px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+}
+
+#search-section button {
+  padding: 8px 15px;
+  background-color: #007bff;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+#search-section button:hover {
+  background-color: #0056b3;
+}
+
+/* Box containing search results, order items, and submit button */
+#order-box {
+  background: white;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  padding: 20px;
+  margin: 20px auto;
+  width: 90%;
+  max-width: 600px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+#order-box h2, #order-box ul, #order-box button {
+  text-align: left;
+}
+
+/* Style list items */
+ul {
+  list-style-type: none;
+  padding: 0;
+}
+
+ul li {
+  background: #f8f8f8;
+  padding: 10px;
+  margin: 5px 0;
+  border-radius: 5px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+ul li button {
+  margin-left: 10px;
+  padding: 5px 10px;
+  border: none;
+  cursor: pointer;
+  border-radius: 5px;
+}
+
+/* button colors */
+ul li button:first-child {
+  background-color: #ffc107;
+  color: black;
+}
+
+ul li button:first-child:hover {
+  background-color: #e0a800;
+}
+
+ul li button:nth-child(2) {
+  background-color: #28a745;
+  color: white;
+}
+
+ul li button:nth-child(2):hover {
+  background-color: #218838;
+}
+
+ul li button:last-child {
+  background-color: #007bff;
+  color: white;
+}
+
+ul li button:last-child:hover {
+  background-color: #0056b3;
+}
+
+#submitOrderButton {
+  display: block;
+  margin: 20px auto 0 auto;
+  padding: 10px 20px;
+  background-color: #007bff;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 16px;
+}
+
+#submitOrderButton:hover {
+  background-color: #0056b3;
+}
+
+.order-form {
+    border: 1px solid #ccc;
+    padding: 10px;
+    margin-bottom: 20px;
+  }
+  .order-form h3 {
+    margin-top: 0;
+  }
+  .order-product {
+    border: 1px dashed #aaa;
+    padding: 5px;
+    margin-bottom: 5px;
+  }
+
+  .hidden { display: none; }
+    #management-toggle { margin-bottom: 20px; }
+    #management-toggle button { margin-right: 10px; }
+    table { width: 100%; border-collapse: collapse; margin-top: 10px; }
+    table, th, td { border: 1px solid #aaa; }
+    th, td { padding: 8px; text-align: left; }
+    th button { font-size: 0.9em; }
+    .report-section { margin-top: 20px; }

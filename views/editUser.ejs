@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Edit User and Orders</title>
+  <link rel="stylesheet" href="/css/styles.css">
+</head>
+<body>
+  <header>
+    <h1>Edit User</h1>
+    <button class="back-dashboard-btn" onclick="window.location.href='/admin/data-manager'">Back to Data Manager</button>
+  </header>
+  <main>
+    <!-- user info here -->
+    <section id="user-edit-section">
+      <h2>User Information</h2>
+      <form action="/admin/edit-user/<%= user._id %>" method="POST">
+        <label for="name">Name:</label>
+        <input type="text" name="name" id="name" value="<%= user.name %>" required>
+        
+        <label for="email">Email:</label>
+        <input type="email" name="email" id="email" value="<%= user.email %>" required>
+        
+        <label for="role">Role:</label>
+        <select name="role" id="role">
+          <option value="user" <%= user.role === 'user' ? 'selected' : '' %>>User</option>
+          <option value="admin" <%= user.role === 'admin' ? 'selected' : '' %>>Admin</option>
+        </select>
+        
+        <legend>Address</legend>
+        <label for="street">Street:</label>
+        <input type="text" name="address[street]" id="street" value="<%= user.address ? user.address.street : '' %>">
+          
+        <label for="city">City:</label>
+        <input type="text" name="address[city]" id="city" value="<%= user.address ? user.address.city : '' %>">
+          
+        <label for="zipcode">Zipcode:</label>
+        <input type="text" name="address[zipcode]" id="zipcode" value="<%= user.address ? user.address.zipcode : '' %>">
+        
+        <button type="submit">Update User</button>
+      </form>
+    </section>
+    
+    <!-- edit order here -->
+    <section id="orders-edit-section">
+      <h2>User Orders</h2>
+      <% if (orders && orders.length > 0) { %>
+        <% orders.forEach(order => { %>
+          <div class="order-form">
+            <h3>Order ID: <%= order._id %></h3>
+            <form action="/admin/edit-order/<%= order._id %>" method="POST">
+              <label for="order_date_<%= order._id %>">Order Date:</label>
+              <input type="datetime-local" name="order_date" id="order_date_<%= order._id %>" value="<%= new Date(order.order_date).toISOString().slice(0,16) %>">
+              
+              <label for="total_amount_<%= order._id %>">Total Amount:</label>
+              <input type="number" name="total_amount" id="total_amount_<%= order._id %>" value="<%= order.total_amount %>" step="0.01" required>
+              
+              <label for="status_<%= order._id %>">Status:</label>
+              <select name="status" id="status_<%= order._id %>">
+                <option value="pending" <%= order.status === 'pending' ? 'selected' : '' %>>Pending</option>
+                <option value="completed" <%= order.status === 'completed' ? 'selected' : '' %>>Completed</option>
+                <option value="cancelled" <%= order.status === 'cancelled' ? 'selected' : '' %>>Cancelled</option>
+              </select>
+              
+              <h3>Products</h3>
+              <% if (order.products && order.products.length > 0) { %>
+                <% order.products.forEach((prod, idx) => { %>
+                  <div class="order-product">
+                    <p><strong>Product:</strong> <%= prod.product_name %></p>
+                    <label for="quantity_<%= order._id %>_<%= idx %>">Quantity:</label>
+                    <input type="number" name="products[<%= idx %>][quantity]" id="quantity_<%= order._id %>_<%= idx %>" value="<%= prod.quantity %>" min="1" required>
+                    
+                    <label for="price_<%= order._id %>_<%= idx %>">Price:</label>
+                    <input type="number" name="products[<%= idx %>][price]" id="price_<%= order._id %>_<%= idx %>" value="<%= prod.price %>" step="0.01" required>
+                    
+                    <!-- hidden product id and name to keep track -->
+                    <input type="hidden" name="products[<%= idx %>][product_id]" value="<%= prod.product_id %>">
+                    <input type="hidden" name="products[<%= idx %>][product_name]" value="<%= prod.product_name %>">
+                  </div>
+                <% }); %>
+              <% } else { %>
+                <p>No products in this order.</p>
+              <% } %>
+              
+              <button type="submit">Update Order</button>
+            </form>
+          </div>
+        <% }); %>
+      <% } else { %>
+        <p>This user has no orders.</p>
+      <% } %>
+    </section>
+  </main>
+</body>
+</html>

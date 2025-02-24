@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>User Dashboard</title>
+  <link rel="stylesheet" href="/css/styles.css">
+</head>
+<body>
+  <header>
+    <h1>Welcome, <%= user.name %>!</h1>
+  </header>
+
+  <!-- User info and actions box -->
+  <div class="user-info-box">
+    <p><strong>Email:</strong> <%= user.email %></p>
+    <% if(user.address) { %>
+      <p><strong>Address:</strong> <%= user.address.street %>, <%= user.address.city %>, <%= user.address.zipcode %></p>
+    <% } else { %>
+      <p><strong>Address:</strong> Not provided</p>
+    <% } %>
+
+    <div class="user-actions">
+      <% if (user.role === "admin") { %>
+        <section id="admin-section">
+          <a href="/admin/data-manager"><button>Data Manager</button></a>
+        </section>
+      <% } %>
+      <section id="profile-edit-section">
+        <button onclick="document.getElementById('edit-profile-form').style.display='block'">Edit Profile</button>
+      </section>
+      <section id="create-order-section">
+        <a href="/orders/new"><button>Create New Order</button></a>
+      </section>
+      <section id="logout-section">
+        <a href="/users/logout"><button>Logout</button></a>
+      </section>
+    </div>
+  </div>
+
+  <div id="edit-profile-form" style="display:none;">
+    <form action="/users/profile?_method=PUT" method="POST">
+      <label>Name:</label>
+      <input type="text" name="name" value="<%= user.name %>" required>
+  
+      <label>Email:</label>
+      <input type="email" name="email" value="<%= user.email %>" required>
+  
+      <label>Street:</label>
+      <input type="text" name="street" value="<%= user.address ? user.address.street : '' %>">
+  
+      <label>City:</label>
+      <input type="text" name="city" value="<%= user.address ? user.address.city : '' %>">
+  
+      <label>Zipcode:</label>
+      <input type="text" name="zipcode" value="<%= user.address ? user.address.zipcode : '' %>">
+  
+      <button type="submit">Update Profile</button>
+      <button type="button" onclick="document.getElementById('edit-profile-form').style.display='none'">Cancel</button>
+    </form>
+  </div>
+
+  <main>
+    <!-- Orders Section -->
+    <section id="orders-section">
+      <h2>Your Orders</h2>
+      <div class="orders-grid">
+        <% if (orders && orders.length > 0) { %>
+          <% orders.forEach(order => { %>  
+            <div class="order-box">
+              <a href="/orders/<%= order._id %>" class="order-link">
+                <p><strong>Order ID:</strong> <%= order._id %></p>
+                <p><strong>Date:</strong> <%= new Date(order.order_date).toLocaleString() %></p>
+                <p><strong>Total Amount:</strong> $<%= order.total_amount %></p>
+                <p><strong>Status:</strong> <%= order.status %></p>
+              </a> 
+              <!-- Delete Order Button -->
+              <form method="POST" action="/orders/<%= order._id %>?_method=DELETE" onsubmit="return confirm('Are you sure you want to delete this order?');">
+                <button type="submit">Delete Order</button>
+              </form>
+            </div>
+          <% }); %>
+        <% } else { %>
+          <p>You have no orders yet.</p>
+        <% } %>
+      </div>
+    </section>
+  </main>
+  <footer>
+    <p>Madi Nurkenov & Makhabbat Khalel</p>
+  </footer>
+</body>
+</html>

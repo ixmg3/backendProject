@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Order Details</title>
+    <link rel="stylesheet" href="/css/styles.css">
+</head>
+<body>
+  <header>
+    <h1>Order Details</h1>
+    <button class="back-dashboard-btn" onclick="window.location.href='/'">Back to Orders</button>
+  </header>
+  <div class="order-box">
+    <p><strong>Order ID:</strong> <%= order._id %></p>
+    <p><strong>Date:</strong> <%= new Date(order.order_date).toLocaleString() %></p>
+    <p><strong>Total Amount:</strong> $<%= order.total_amount %></p>
+    <p><strong>Status:</strong> <%= order.status %></p>
+    <h3>Products:</h3>
+    <ul>
+      <% order.products.forEach(function(item) { %>
+        <li><%= item.product_name %> - $<%= item.price %> x <%= item.quantity %></li>
+      <% }); %>
+    </ul>
+  </div>
+  <footer>
+    <p>Madi Nurkenov & Makhabbat Khalel</p>
+  </footer>
+</body>
+</html>
